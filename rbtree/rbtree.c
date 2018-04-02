@@ -13,12 +13,12 @@ static void print(const rb_node *node, int depth) {
     node->parent ? node->parent->key : 0
   );
   print(node->right, depth + 1);
-} 
+}
 
 static int is_red(const rb_node *node) {
   if (!node)
     return 0;
-  
+
   return node->color;
 }
 
@@ -34,7 +34,7 @@ static int is_root(const rb_node *node) {
 static int is_left(const rb_node *node) {
   if (!node || !node->parent)
     return 0;
-  
+
   if (node->parent->left == node)
     return 1;
   return 0;
@@ -43,7 +43,7 @@ static int is_left(const rb_node *node) {
 static rb_node *get_uncle(const rb_node *node) {
   if (!node || !node->parent || !node->parent->parent)
     return NULL;
-  
+
   rb_node *gp = node->parent->parent;
   if (gp->left == node->parent)
     return gp->right;
@@ -96,7 +96,7 @@ static void balance_tree(rb_node *node) {
     node->parent->parent->left->color = RB_TREE_BLACK;
     node->parent->parent->color = RB_TREE_RED;
     node->parent->parent->right->color = RB_TREE_BLACK;
-    balance_tree(node->parent->parent);
+    balance_tree(node->parent);
     return;
   }
 
@@ -106,15 +106,18 @@ static void balance_tree(rb_node *node) {
   if (is_left(node->parent)) {
     if (is_left(node)) {
       rotate_right(node->parent->parent, 1);
+      return;
     } else {
       rotate_left(node->parent, 0);
       rotate_right(node->parent, 1);
+      return;
     }
   }
 
   if (is_left(node)) {
     rotate_right(node->parent, 0);
     rotate_left(node->parent, 1);
+    return;
   }
 
   rotate_left(node->parent->parent, 1);
